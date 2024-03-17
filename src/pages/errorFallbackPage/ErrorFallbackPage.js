@@ -1,5 +1,6 @@
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
+import "./ErrorFallbackPage.css";
 
 const ErrorFallbackPage = ({ error }) => {
   const { resetBoundary } = useErrorBoundary();

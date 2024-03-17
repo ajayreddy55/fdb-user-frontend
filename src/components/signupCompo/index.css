@@ -73,6 +73,34 @@
   outline: none;
 }
 
+.signup-terms-conditions-container {
+  width: 100%;
+  min-width: 90px;
+  margin-top: 9px;
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+}
+
+.signup-terms-checkbox {
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+}
+
+.signup-terms-conditions-text {
+  color: #424242;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.signup-terms-conditions-text:hover {
+  color: rgb(81, 81, 255);
+  text-decoration: underline;
+}
+
 .signup-submit-button-container {
   width: 100%;
   min-width: 90px;

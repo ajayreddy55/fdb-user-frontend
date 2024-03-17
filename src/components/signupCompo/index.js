@@ -51,6 +51,7 @@ const SignupCompo = () => {
   );
   const [countryPhoneSearch, setCountryPhoneSearch] = useState("");
   const [isSignupButtonActive, setIsSignupButtonActive] = useState(false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const filteredCountriesList = useMemo(() => {
     const newList = countriesList.filter((eachCountry) =>
@@ -326,6 +327,11 @@ const SignupCompo = () => {
         ...prevState,
         passwordRequiredText: "Password and Confirm Password must be Same",
       }));
+    } else if (!isCheckboxChecked) {
+      setServerResMsg((prevState) => ({
+        ...prevState,
+        messageText: "Please accept terms and Conditions",
+      }));
     } else {
       registerTheUser();
     }
@@ -335,6 +341,15 @@ const SignupCompo = () => {
     event.preventDefault();
 
     validateFormData();
+  };
+
+  const changeTheCheckboxStatus = (event) => {
+    setServerResMsg((prevState) => ({
+      ...prevState,
+      messageText: "",
+      messageTextColor: "",
+    }));
+    setIsCheckboxChecked(!isCheckboxChecked);
   };
 
   const changeTheCountrySearch = (event) => {
@@ -527,6 +542,19 @@ const SignupCompo = () => {
             <p className="signup-required-text">
               {confirmPasswordText.passwordRequiredText}
             </p>
+          </div>
+          <div className="signup-terms-conditions-container">
+            <div className="d-flex align-items-center flex-wrap">
+              <input
+                name="checkboxTerms"
+                type="checkbox"
+                className="signup-terms-checkbox"
+                onChange={changeTheCheckboxStatus}
+              />
+              <Link className="signup-terms-conditions-text">
+                Terms & Conditions
+              </Link>
+            </div>
           </div>
           <div className="signup-submit-button-container">
             <button
