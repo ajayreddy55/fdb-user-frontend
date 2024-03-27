@@ -1,9 +1,11 @@
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import "./ErrorFallbackPage.css";
+import { useAuthLang } from "../../context/authLangContext";
 
 const ErrorFallbackPage = ({ error }) => {
   const { resetBoundary } = useErrorBoundary();
+  const { languageDisplay } = useAuthLang();
 
   return (
     <div className="signup-error-fallback-main-container">
@@ -16,9 +18,8 @@ const ErrorFallbackPage = ({ error }) => {
           />
         </div>
         <h3 className="signup-error-fallback-head">
-          Oops! Something Went Wrong. Try Again.
+          {languageDisplay.oopsSom}
         </h3>
-        <p className="signup-error-fallback-text">Your Payment Failed</p>
         <button className="btn btn-primary mt-2" onClick={resetBoundary}>
           Reload
         </button>

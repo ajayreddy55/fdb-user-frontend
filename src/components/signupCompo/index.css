@@ -40,11 +40,38 @@
   margin-top: 5px;
 }
 
+.signup-lang-select-container {
+  min-width: 90px;
+  width: 95%;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.signup-lang-select-ele {
+  padding: 5px;
+  height: 32px;
+  color: #444444;
+  font-size: 14px;
+  outline: none;
+  border: 1px solid #bebfc2;
+  border-radius: 5px;
+}
+
+.signup-lang-select-ele option:first-child {
+  color: #949393;
+}
+
+.signup-lang-select-ele option {
+  padding: 5px;
+}
+
 .signup-form-element {
   width: 95%;
   min-width: 90px;
-  margin-top: 15px;
-  margin-bottom: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -55,7 +82,7 @@
   color: #636262;
   font-weight: 600;
   margin-bottom: 4px;
-  margin-top: 10px;
+  margin-top: 5px;
   cursor: pointer;
 }
 
@@ -69,15 +96,15 @@
   font-size: 18px;
   color: #000000;
   margin-top: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   outline: none;
 }
 
 .signup-terms-conditions-container {
   width: 100%;
   min-width: 90px;
-  margin-top: 9px;
-  margin-bottom: 9px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: stretch;
@@ -104,8 +131,8 @@
 .signup-submit-button-container {
   width: 100%;
   min-width: 90px;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   display: flex;
   align-items: center;
   justify-content: stretch;
@@ -293,6 +320,11 @@
   outline: none;
 }
 
+.signup-password-points-list {
+  color: #585858;
+  font-size: 12px;
+}
+
 .success-msg-color {
   color: green;
 }
@@ -301,7 +333,7 @@
   width: 95%;
   min-width: 90px;
   margin-top: 7px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;

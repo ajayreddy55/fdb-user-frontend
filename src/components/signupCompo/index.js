@@ -9,8 +9,9 @@ import countriesList from "../../countryCodes";
 import "iconify-icon";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import isEmail from "validator/lib/isEmail";
-import { ErrorBoundary, ErrorBoundaryContext } from "react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallbackPage from "../../pages/errorFallbackPage/ErrorFallbackPage";
+import { useAuthLang } from "../../context/authLangContext";
 
 const SignupCompo = () => {
   const [username, setUsername] = useState({
@@ -53,6 +54,9 @@ const SignupCompo = () => {
   const [isSignupButtonActive, setIsSignupButtonActive] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
+  const { changeTheLanguage, language, languageDisplay, fdbCsrfToken } =
+    useAuthLang();
+
   const filteredCountriesList = useMemo(() => {
     const newList = countriesList.filter((eachCountry) =>
       eachCountry.name.toLowerCase().includes(countryPhoneSearch.toLowerCase())
@@ -73,7 +77,7 @@ const SignupCompo = () => {
       setUsername((prevState) => ({
         ...prevState,
         name: "",
-        nameRequiredText: "Required*",
+        nameRequiredText: languageDisplay.username.msgReq,
       }));
     } else {
       setUsername((prevState) => ({
@@ -97,7 +101,7 @@ const SignupCompo = () => {
       setEmailText((prevState) => ({
         ...prevState,
         email: "",
-        emailRequiredText: "Required*",
+        emailRequiredText: languageDisplay.email.msgReq,
       }));
     } else {
       if (isEmail(emailInput)) {
@@ -110,7 +114,7 @@ const SignupCompo = () => {
         setEmailText((prevState) => ({
           ...prevState,
           email: emailInput,
-          emailRequiredText: "Invalid Email",
+          emailRequiredText: languageDisplay.email.msgInv,
         }));
       }
     }
@@ -129,7 +133,7 @@ const SignupCompo = () => {
       setPhoneNumberText((prevState) => ({
         ...prevState,
         phoneNumber: "",
-        phoneNumberRequiredText: "Required*",
+        phoneNumberRequiredText: languageDisplay.phoneNumber.msgReq,
       }));
     } else {
       if (
@@ -144,7 +148,7 @@ const SignupCompo = () => {
         setPhoneNumberText((prevState) => ({
           ...prevState,
           phoneNumber: phoneNumberInput,
-          phoneNumberRequiredText: "Invalid Phone Number",
+          phoneNumberRequiredText: languageDisplay.phoneNumber.msgInv,
         }));
       }
     }
@@ -152,6 +156,8 @@ const SignupCompo = () => {
 
   const changeThePassword = (event) => {
     const passwordInput = event.target.value;
+    let passwordTest =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{6,12}$/;
 
     setServerResMsg((prevState) => ({
       ...prevState,
@@ -163,14 +169,22 @@ const SignupCompo = () => {
       setPasswordText((prevState) => ({
         ...prevState,
         password: "",
-        passwordRequiredText: "Required*",
+        passwordRequiredText: languageDisplay.password.msgReq,
       }));
     } else {
-      setPasswordText((prevState) => ({
-        ...prevState,
-        password: passwordInput,
-        passwordRequiredText: "",
-      }));
+      if (!passwordTest.test(passwordText.password)) {
+        setPasswordText((prevState) => ({
+          ...prevState,
+          password: passwordInput,
+          passwordRequiredText: languageDisplay.password.msgInv,
+        }));
+      } else {
+        setPasswordText((prevState) => ({
+          ...prevState,
+          password: passwordInput,
+          passwordRequiredText: "",
+        }));
+      }
     }
   };
 
@@ -187,20 +201,29 @@ const SignupCompo = () => {
       setConfirmPasswordText((prevState) => ({
         ...prevState,
         password: "",
-        passwordRequiredText: "Required*",
+        passwordRequiredText: languageDisplay.confirmPassword.msgReq,
       }));
     } else {
-      setConfirmPasswordText((prevState) => ({
-        ...prevState,
-        password: passwordInput,
-        passwordRequiredText: "",
-      }));
+      if (passwordText.password !== passwordInput) {
+        setConfirmPasswordText((prevState) => ({
+          ...prevState,
+          password: passwordInput,
+          passwordRequiredText: languageDisplay.confirmPassword.msgInv,
+        }));
+      } else {
+        setConfirmPasswordText((prevState) => ({
+          ...prevState,
+          password: passwordInput,
+          passwordRequiredText: "",
+        }));
+      }
     }
   };
 
   const registerTheUser = async () => {
     try {
       setIsSignupButtonActive(true);
+
       const url = "http://localhost:5020/auth/register-user";
       const options = {
         method: "POST",
@@ -274,25 +297,25 @@ const SignupCompo = () => {
       setUsername((prevState) => ({
         ...prevState,
         name: "",
-        nameRequiredText: "Required*",
+        nameRequiredText: languageDisplay.username.msgReq,
       }));
     } else if (emailText.email === "") {
       setEmailText((prevState) => ({
         ...prevState,
         email: "",
-        emailRequiredText: "Required*",
+        emailRequiredText: languageDisplay.email.msgReq,
       }));
     } else if (!isEmail(emailText.email)) {
       setEmailText((prevState) => ({
         ...prevState,
         email: "",
-        emailRequiredText: "Invalid Email",
+        emailRequiredText: languageDisplay.email.msgInv,
       }));
     } else if (phoneNumberText.phoneNumber === "") {
       setPhoneNumberText((prevState) => ({
         ...prevState,
         phoneNumber: "",
-        phoneNumberRequiredText: "Required*",
+        phoneNumberRequiredText: languageDisplay.phoneNumber.msgReq,
       }));
     } else if (
       !isValidPhoneNumber(
@@ -302,35 +325,34 @@ const SignupCompo = () => {
       setPhoneNumberText((prevState) => ({
         ...prevState,
         phoneNumber: "",
-        phoneNumberRequiredText: "Invalid Phone Number",
+        phoneNumberRequiredText: languageDisplay.phoneNumber.msgInv,
       }));
     } else if (passwordText.password === "") {
       setPasswordText((prevState) => ({
         ...prevState,
         password: "",
-        passwordRequiredText: "Required*",
+        passwordRequiredText: languageDisplay.password.msgReq,
       }));
     } else if (confirmPasswordText.password === "") {
       setConfirmPasswordText((prevState) => ({
         ...prevState,
         password: "",
-        passwordRequiredText: "Required*",
+        passwordRequiredText: languageDisplay.confirmPassword.msgReq,
       }));
     } else if (!passwordTest.test(passwordText.password)) {
       setPasswordText((prevState) => ({
         ...prevState,
-        passwordRequiredText:
-          "Password must contain at least one lowercase alphabet, uppercase alphabet, Numeric digit and special character, Length between 6 and 12",
+        passwordRequiredText: languageDisplay.password.msgInv,
       }));
     } else if (confirmPasswordText.password !== passwordText.password) {
       setConfirmPasswordText((prevState) => ({
         ...prevState,
-        passwordRequiredText: "Password and Confirm Password must be Same",
+        passwordRequiredText: languageDisplay.confirmPassword.msgInv,
       }));
     } else if (!isCheckboxChecked) {
       setServerResMsg((prevState) => ({
         ...prevState,
-        messageText: "Please accept terms and Conditions",
+        messageText: languageDisplay.termsConditions.msgReq,
       }));
     } else {
       registerTheUser();
@@ -356,6 +378,42 @@ const SignupCompo = () => {
     setCountryPhoneSearch(event.target.value);
   };
 
+  const changeLangInput = (event) => {
+    if (event.target.value !== "") {
+      changeTheLanguage(event.target.value);
+      setUsername((prevState) => ({
+        ...prevState,
+        name: "",
+        nameRequiredText: "",
+      }));
+      setEmailText((prevState) => ({
+        ...prevState,
+        email: "",
+        emailRequiredText: "",
+      }));
+      setPhoneNumberText((prevState) => ({
+        ...prevState,
+        phoneNumber: "",
+        phoneNumberRequiredText: "",
+      }));
+      setPasswordText((prevState) => ({
+        ...prevState,
+        password: "",
+        passwordRequiredText: "",
+      }));
+      setConfirmPasswordText((prevState) => ({
+        ...prevState,
+        password: "",
+        passwordRequiredText: "",
+      }));
+      setServerResMsg((prevState) => ({
+        ...prevState,
+        messageText: "",
+        messageTextColor: "",
+      }));
+    }
+  };
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
       <div
@@ -369,15 +427,29 @@ const SignupCompo = () => {
           <img className="signup-logo-image" src={FDBLogo} alt="website logo" />
           <p className="signup-logo-name">FindDubai</p>
         </div>
+        <div className="signup-lang-select-container">
+          <select
+            className="signup-lang-select-ele"
+            value={language}
+            onChange={changeLangInput}
+            aria-label="language select"
+          >
+            <option value={""} disabled aria-disabled={true}>
+              Language
+            </option>
+            <option value={"ENG"}>English</option>
+            <option value={"ARB"}>Arabic</option>
+          </select>
+        </div>
         <form className="signup-form-element" onSubmit={submitTheForm}>
           <div className="d-flex flex-column justify-content-center mt-2 mb-1">
             <label className="signup-label" htmlFor="signupUsername">
-              Username
+              {languageDisplay.username.label}
             </label>
             <input
               className="signup-input-ele"
               id="signupUsername"
-              placeholder="Enter Your Username"
+              placeholder={languageDisplay.username.placeholder}
               type="text"
               value={username.name}
               onChange={changeTheUsername}
@@ -386,12 +458,12 @@ const SignupCompo = () => {
           </div>
           <div className="d-flex flex-column justify-content-center mt-1 mb-1">
             <label className="signup-label" htmlFor="signupEmail">
-              Email
+              {languageDisplay.email.label}
             </label>
             <input
               className="signup-input-ele"
               id="signupEmail"
-              placeholder="Enter Your Email"
+              placeholder={languageDisplay.email.placeholder}
               type="text"
               value={emailText.email}
               onChange={changeTheEmail}
@@ -402,7 +474,7 @@ const SignupCompo = () => {
           </div>
           <div className="d-flex flex-column justify-content-center mt-1 mb-1">
             <label className="signup-label" htmlFor="signupPhoneNumber">
-              Phone number
+              {languageDisplay.phoneNumber.label}
             </label>
             <div className="signup-input-phone-number-container">
               <div
@@ -480,7 +552,7 @@ const SignupCompo = () => {
               <input
                 className="signup-phone-number-input-ele"
                 id="signupPhoneNumber"
-                placeholder="Enter Your Phone number"
+                placeholder={languageDisplay.phoneNumber.placeholder}
                 type="tel"
                 value={phoneNumberText.phoneNumber}
                 onChange={changeThePhoneNumber}
@@ -493,13 +565,13 @@ const SignupCompo = () => {
           </div>
           <div className="d-flex flex-column justify-content-center mt-1 mb-1">
             <label className="signup-label" htmlFor="signupPassword">
-              Password
+              {languageDisplay.password.label}
             </label>
             <div className="signup-input-password-container">
               <input
                 className="signup-input-password-ele"
                 id="signupPassword"
-                placeholder="Enter Your Password"
+                placeholder={languageDisplay.password.placeholder}
                 type={showPassword ? "text" : "password"}
                 value={passwordText.password}
                 onChange={changeThePassword}
@@ -515,16 +587,22 @@ const SignupCompo = () => {
             <p className="signup-required-text">
               {passwordText.passwordRequiredText}
             </p>
+            <ul className="signup-password-points-list">
+              <li>{languageDisplay.passwordIns.one}</li>
+              <li>{languageDisplay.passwordIns.two}</li>
+              <li>{languageDisplay.passwordIns.three}</li>
+              <li>{languageDisplay.passwordIns.four}</li>
+            </ul>
           </div>
           <div className="d-flex flex-column justify-content-center mt-1 mb-1">
             <label className="signup-label" htmlFor="signupConfirmPassword">
-              Confirm Password
+              {languageDisplay.confirmPassword.label}
             </label>
             <div className="signup-input-password-container">
               <input
                 className="signup-input-password-ele"
                 id="signupConfirmPassword"
-                placeholder="Confirm Password"
+                placeholder={languageDisplay.confirmPassword.placeholder}
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPasswordText.password}
                 onChange={changeTheConfirmPassword}
@@ -552,7 +630,7 @@ const SignupCompo = () => {
                 onChange={changeTheCheckboxStatus}
               />
               <Link className="signup-terms-conditions-text">
-                Terms & Conditions
+                {languageDisplay.termsConditions.label}
               </Link>
             </div>
           </div>
@@ -566,7 +644,7 @@ const SignupCompo = () => {
               type="submit"
               disabled={isSignupButtonActive}
             >
-              Signup
+              {languageDisplay.signupButton}
             </button>
           </div>
           <p
@@ -577,8 +655,10 @@ const SignupCompo = () => {
         </form>
         <div className="signup-already-have-account-container">
           <p className="signup-already-have-account-text">
-            Already have an Account?{" "}
-            <Link className="signup-already-have-account-link">Signin</Link>
+            {languageDisplay.alreadyHave.label}{" "}
+            <Link className="signup-already-have-account-link">
+              {languageDisplay.alreadyHave.signinLink}
+            </Link>
           </p>
         </div>
       </div>

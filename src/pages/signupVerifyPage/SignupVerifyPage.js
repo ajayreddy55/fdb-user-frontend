@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./SignupVerifyPage.css";
 import { useEffect, useState } from "react";
 import { Hourglass } from "react-loader-spinner";
+import { useAuthLang } from "../../context/authLangContext";
 
 const apiConstants = {
   initial: "INITIAL",
@@ -17,6 +18,7 @@ const SignupVerifyPage = () => {
   const [serverMsg, setServerMsg] = useState("");
 
   const params = useParams();
+  const { fdbCsrfToken } = useAuthLang;
 
   useEffect(() => {
     verifyUserEmail();
